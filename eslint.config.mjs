@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scratch / archived code:
+    ".do_not_commit/**",
   ]),
 ]);
 
