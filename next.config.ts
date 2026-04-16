@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { envConfig } from "@/config/env";
+
 const nextConfig: NextConfig = {
   // NOTE: Hides the Next.js on-screen dev indicator/devtools widget in development.
   devIndicators: false,
@@ -7,7 +9,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/python-api/:path*",
-        destination: "http://localhost:8000/:path*",
+        destination: `${envConfig.backendUrl}/:path*`,
       },
     ];
   },
