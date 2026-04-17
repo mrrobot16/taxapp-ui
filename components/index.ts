@@ -1,2 +1,2 @@
-export * from "@/components/AbsoluteImportDummyDiv";
-export * from "@/components/AbsoluteImportDummyButton";
+export * from "@/components/AbsoluteImportDummyComponent";
+export * from "@/components/ui";
