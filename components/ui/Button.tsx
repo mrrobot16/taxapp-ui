@@ -16,7 +16,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  onClick?: () => void | Promise<void>;
+  onClick?: () => void | Promise<void> | undefined;
   className?: string;
 }
 
@@ -45,21 +45,6 @@ const gapClasses: Record<Gap, string> = {
   sm: "gap-2",
   md: "gap-3",
 };
-
-interface ButtonProps {
-  children: ReactNode;
-  variant?: Variant;
-  size?: Size;
-  /** Flex justify-content; defaults to `center`. */
-  justify?: Justify;
-  /** Gap between flex children; defaults to `none` for `icon`, else `sm`. */
-  gap?: Gap;
-  fullWidth?: boolean;
-  disabled?: boolean;
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
-  className?: string;
-}
 
 export function Button({
   children,
