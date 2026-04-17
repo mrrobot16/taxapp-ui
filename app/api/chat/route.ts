@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-  } catch {
+  } catch (error: unknown | Error) {
+    console.log("Error fetching chat", error instanceof Error ? error.message : "Unknown error");
     return new Response(
       JSON.stringify({ error: BACKEND_UNREACHABLE_ERROR_MESSAGE }),
       { status: HTTP_STATUS_SERVICE_UNAVAILABLE, headers: { "Content-Type": "application/json" } }
