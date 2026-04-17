@@ -1,0 +1,113 @@
+"use client";
+
+import { useRef, useState, KeyboardEvent } from "react";
+
+import { Icon } from "@/components";
+
+interface ChatInputProps {
+  onSend: (text: string) => void;
+  isLoading: boolean;
+  disabled: boolean;
+  disabledReason?: string;
+  /** `footer`: full-width bar at bottom. `embedded`: centered, no top border (empty state). */
+  variant?: "footer" | "embedded";
+}
+
+export function ChatInput({
+  onSend,
+  isLoading,
+  disabled,
+  disabledReason,
+  variant = "footer",
+}: ChatInputProps) {
+  const [value, setValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = () => {
+    const trimmed = value.trim();
+    if (!trimmed || isLoading || disabled) return;
+    onSend(trimmed);
+    setValue("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleInput = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 180)}px`;
+  };
+
+  const isBlocked = disabled || isLoading;
+  const canSend = !isBlocked && value.trim().length > 0;
+
+  const outerClass =
+    variant === "embedded"
+      ? "shrink-0 w-full px-0 py-2 bg-transparent"
+      : "shrink-0 bg-rh-dark px-4 py-4";
+
+  return (
+    <div className={outerClass}>
+      {disabledReason && (
+        <p className="text-xs text-amber-400 mb-2 text-center">{disabledReason}</p>
+      )}
+
+      <div
+        className={`flex items-center gap-2 bg-rh-surface-2 border rounded-[26px] px-4 py-2 transition-colors ${
+          isBlocked
+            ? "border-rh-border opacity-60"
+            : "border-rh-border focus-within:border-rh-lime"
+        }`}
+      >
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onInput={handleInput}
+          placeholder="Ask a tax question…"
+          disabled={isBlocked}
+          rows={1}
+          className="flex-1 bg-transparent resize-none text-sm text-rh-white placeholder-rh-cool-gray focus:outline-none leading-relaxed max-h-44 disabled:cursor-not-allowed"
+        />
+
+        <button
+          onClick={handleSubmit}
+          disabled={!canSend}
+          className={`shrink-0 mb-0.5 h-8 w-8 rounded-full flex items-center justify-center transition-colors disabled:cursor-not-allowed ${
+            canSend
+              ? "bg-rh-lime text-rh-dark hover:opacity-90"
+              : "bg-rh-border text-rh-cool-gray opacity-50"
+          }`}
+          aria-label="Send"
+        >
+          {isLoading ? (
+            <Icon name="spinner" size="sm" />
+          ) : (
+            <Icon name="send" size="sm" />
+          )}
+        </button>
+      </div>
+
+      <p
+        className={`text-xs text-rh-cool-gray mt-2 ${
+          variant === "embedded" ? "text-center opacity-80" : "text-center"
+        }`}
+      >
+        Press <kbd className="bg-rh-surface-2 border border-rh-border rounded px-1">Enter</kbd> to send ·{" "}
+        <kbd className="bg-rh-surface-2 border border-rh-border rounded px-1">Shift + Enter</kbd> for new line
+      </p>
+    </div>
+  );
+}
+
+export default ChatInput;
