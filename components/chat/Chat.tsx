@@ -20,13 +20,8 @@ export function Chat() {
   const [topK, setTopK] = useState(CHAT_DEFAULT_TOP_K);
   const [backendStatus, setBackendStatus] = useState<BackendStatus>("loading");
   const [docCount, setDocCount] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile());
   const [settingsOpen, setSettingsOpen] = useState(false);
-
-  // Mobile: start with drawer closed so main uses full width; desktop keeps sidebar expanded
-  useEffect(() => {
-    if (isMobile()) setSidebarOpen(false);
-  }, []);
 
   const {
     messages,
