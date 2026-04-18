@@ -20,8 +20,12 @@ export function Chat() {
   const [topK, setTopK] = useState(CHAT_DEFAULT_TOP_K);
   const [backendStatus, setBackendStatus] = useState<BackendStatus>("loading");
   const [docCount, setDocCount] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile());
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobile()) setSidebarOpen(false);
+  }, []);
 
   const {
     messages,
