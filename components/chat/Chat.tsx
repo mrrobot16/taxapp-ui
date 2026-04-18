@@ -63,9 +63,9 @@ export function Chat() {
 
   const disabledReason =
     backendStatus === "offline"
-      ? "Python backend is offline. Run: npm run start:api"
+      ? "Backend is offline"
       : backendStatus === "no_index"
-      ? "Knowledge base not indexed. Run: npm run scripts:indexer"
+      ? "Knowledge base not indexed."
       : undefined;
 
   const isEmpty = messages.length === 0;
