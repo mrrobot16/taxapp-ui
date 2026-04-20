@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tax App - V1",
+  title: "Tax App | The tax accountant’s sidekick",
   description: "Tax App | The tax accountant’s sidekick",
   icons: {
     icon: "/favicon.ico",
