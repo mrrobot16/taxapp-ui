@@ -2,13 +2,16 @@ import { NextRequest } from "next/server";
 import {
   API_ROUTES,
   BACKEND_UNREACHABLE_ERROR_MESSAGE,
-  DEFAULT_BACKEND_URL,
+  envConfig,
   HTTP_STATUS_SERVICE_UNAVAILABLE,
 } from "@/config";
 
-const BACKEND_URL = process.env.BACKEND_URL ?? DEFAULT_BACKEND_URL;
+const BACKEND_URL = envConfig.backendUrl;
 
 export async function POST(req: NextRequest) {
+  console.log('--------------------------------')
+  console.log(`${BACKEND_URL}${API_ROUTES.chat}`)
+  console.log('--------------------------------')
   const body = await req.json();
 
   let upstream: Response;
