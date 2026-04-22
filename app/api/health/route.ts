@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
+
 import {
   API_ROUTES,
-  DEFAULT_BACKEND_URL,
+  envConfig,
   HTTP_STATUS_SERVICE_UNAVAILABLE,
-} from "@/config/constants";
+} from "@/config";
 
-// Use 127.0.0.1 explicitly to avoid IPv6 resolution issues with localhost
-const BACKEND_URL = process.env.BACKEND_URL ?? DEFAULT_BACKEND_URL;
-
+const BACKEND_URL = envConfig.backendUrl;
 export async function GET() {
   try {
+    console.log('--------------------------------')
+    console.log(`${BACKEND_URL}${API_ROUTES.health}`)
+    console.log('--------------------------------')
     const response = await fetch(`${BACKEND_URL}${API_ROUTES.health}`, { cache: "no-store" });
     const data = await response.json();
     return NextResponse.json(data);
