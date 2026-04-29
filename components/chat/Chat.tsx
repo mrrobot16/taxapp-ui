@@ -72,7 +72,7 @@ export function Chat() {
 
   return (
     <div className="flex h-screen bg-rh-dark text-rh-white overflow-hidden">
-      <Sidebar
+      {/* <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((v) => !v)}
         conversations={conversations}
@@ -85,18 +85,18 @@ export function Chat() {
           setSettingsOpen(true);
           if (isMobile()) setSidebarOpen(false);
         }}
-      />
+      /> */}
 
       {/* Mobile / tablet: dim main when sidebar is expanded so it floats instead of squeezing layout */}
-      {sidebarOpen && (
+      {/* {sidebarOpen && (
         <div
           className="fixed inset-0 z-30 bg-black/50 md:hidden"
           aria-hidden
           onClick={() => setSidebarOpen(false)}
         />
-      )}
+      )} */}
 
-      {settingsOpen && (
+      {/* {settingsOpen && (
         <SettingsModal
           showSources={showSources}
           onShowSourcesChange={setShowSources}
@@ -107,11 +107,11 @@ export function Chat() {
           backendStatus={backendStatus}
           onClose={() => setSettingsOpen(false)}
         />
-      )}
+      )} */}
 
       <main className="flex flex-col flex-1 overflow-hidden min-w-0 w-full bg-rh-dark">
         <header className="shrink-0 bg-rh-dark px-4 py-4 flex items-center gap-3">
-          <Button
+          {/* <Button
             type="button"
             variant="ghost"
             size="icon"
@@ -120,7 +120,7 @@ export function Chat() {
             onClick={() => setSidebarOpen(true)}
           >
             <Icon name="menu" size="md" />
-          </Button>
+          </Button> */}
           <Image
             src="/taxapp.png"
             alt="Taxapp"
