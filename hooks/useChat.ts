@@ -97,6 +97,7 @@ export function useChat({ topK }: UseChatOptions): UseChatReturn {
       const res = await fetch(API_ROUTES.chat, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           message: text,
           history: historyRef.current.slice(-CHAT_HISTORY_WINDOW),
