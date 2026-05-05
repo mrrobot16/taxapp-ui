@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tax App UI
 
-## Getting Started
+Next.js frontend for the Tax App assistant.
 
-First, run the development server:
+## Prerequisites
+
+- Bun (`>=1.0`)
+- Node.js (`>=20.9.0`)
+- A Firebase project with Authentication enabled
+
+## Local Setup
+
+1. Copy `.env.example` into `.env.local`.
+2. Fill all Firebase variables:
+   - `NEXT_PUBLIC_FIREBASE_API_KEY`
+   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+   - `NEXT_PUBLIC_FIREBASE_APP_ID`
+   - `FIREBASE_PROJECT_ID`
+   - `FIREBASE_CLIENT_EMAIL`
+   - `FIREBASE_PRIVATE_KEY`
+   - `FIREBASE_SESSION_COOKIE_NAME` (optional override)
+   - `FIREBASE_SESSION_MAX_AGE_MS` (optional override)
+3. Choose environment routing (`APP_ENV` / `NEXT_PUBLIC_APP_ENV`).
+4. Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Run dev server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Firebase Setup Checklist
 
-To learn more about Next.js, take a look at the following resources:
+1. Create Firebase project and web app.
+2. In **Authentication > Sign-in method**, enable:
+   - Email/Password
+   - Google
+3. Create a service account key in Firebase Console.
+4. Put service account values into server env variables.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Auth Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. User signs in on `/login` using Firebase Web SDK.
+2. Client sends Firebase ID token to `POST /api/auth/session`.
+3. Server verifies token with Firebase Admin and sets an httpOnly session cookie.
+4. Protected pages and API routes validate this cookie on each request.
+5. `POST /api/auth/logout` clears cookie and revokes refresh tokens.
 
-## Deploy on Vercel
+## Validation Commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+bun run lint
+bun run typecheck
+bun run build
+```
