@@ -53,7 +53,15 @@ Copy those values into `.env.local` using this mapping:
 - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` -> `messagingSenderId`
 - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` -> `measurementId` (if Analytics is enabled)
 
-## 4) Update local environment file
+## 4) Enable Authentication providers
+
+1. In Firebase Console, open **Authentication**.
+2. Go to **Sign-in method**.
+3. Enable the following providers:
+   - **Google**
+   - **Email/Password**
+
+## 5) Update local environment file
 
 1. Copy `.env.example` to `.env.local` if you have not already:
 
@@ -63,7 +71,7 @@ Copy those values into `.env.local` using this mapping:
 
 2. Replace example values with your Firebase project values.
 
-## 5) Recommended verification
+## 6) Recommended verification
 
 - Start the app and verify login flow works:
 
