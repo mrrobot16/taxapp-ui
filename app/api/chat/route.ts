@@ -5,20 +5,32 @@ import {
   envConfig,
   HTTP_STATUS_SERVICE_UNAVAILABLE,
 } from "@/config";
+import { toAuthUser, verifySessionFromCookies } from "@/lib/auth/session";
 
 const BACKEND_URL = envConfig.backendUrl;
 
 export async function POST(req: NextRequest) {
-  console.log('--------------------------------')
-  console.log(`${BACKEND_URL}${API_ROUTES.chat}`)
-  console.log('--------------------------------')
+  const session = await verifySessionFromCookies();
+  if (!session) {
+    return new Response(
+      JSON.stringify({ error: "Authentication required." }),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  const user = toAuthUser(session);
   const body = await req.json();
 
   let upstream: Response;
   try {
     upstream = await fetch(`${BACKEND_URL}${API_ROUTES.chat}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-User-Uid": user.uid,
+        "X-Auth-User-Email": user.email ?? "",
+        "X-Auth-User-Name": user.name ?? "",
+      },
       body: JSON.stringify(body),
     });
   } catch (error: unknown | Error) {

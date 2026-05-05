@@ -25,3 +25,10 @@ export interface HistoryEntry {
   role: "user" | "assistant";
   content: string;
 }
+
+export interface AuthUser {
+  uid: string;
+  email: string | null;
+  name: string | null;
+  picture: string | null;
+}

@@ -1,15 +1,13 @@
 import { redirect } from "next/navigation";
 
-import { Chat } from "@/components";
+import { LoginPageContent } from "@/components";
 import { verifySessionFromCookies } from "@/lib/auth/session";
 
-export default async function Home() {
+export default async function LoginPage() {
   const session = await verifySessionFromCookies();
-  if (!session) {
-    redirect("/login");
+  if (session) {
+    redirect("/");
   }
 
-  return (
-    <Chat />
-  );
+  return <LoginPageContent />;
 }

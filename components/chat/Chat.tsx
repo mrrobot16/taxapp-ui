@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { Sidebar, SettingsModal, ChatMessageList, ChatInput, Button, Icon } from "@/components";
+import { Sidebar, SettingsModal, ChatMessageList, ChatInput, Button, Icon, useAuth } from "@/components";
 import { useChat } from "@/hooks";
 import type { BackendStatus } from "@/types";
 import {
@@ -14,18 +15,15 @@ import {
 } from "@/config";
 import { isMobile } from "@/utils";
 
-
 export function Chat() {
+  const router = useRouter();
+  const { user, isLoading: isAuthLoading, signOut, refreshUser } = useAuth();
   const [showSources, setShowSources] = useState(true);
   const [topK, setTopK] = useState(CHAT_DEFAULT_TOP_K);
   const [backendStatus, setBackendStatus] = useState<BackendStatus>("loading");
   const [docCount, setDocCount] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile());
   const [settingsOpen, setSettingsOpen] = useState(false);
-
-  useEffect(() => {
-    if (isMobile()) setSidebarOpen(false);
-  }, []);
 
   const {
     messages,
@@ -39,6 +37,11 @@ export function Chat() {
   } = useChat({ topK });
 
   const inputDisabled = backendStatus === "offline" || backendStatus === "no_index";
+
+  useEffect(() => {
+    if (isAuthLoading || user) return;
+    void refreshUser();
+  }, [isAuthLoading, user, refreshUser]);
 
   useEffect(() => {
     async function checkHealth() {
@@ -69,10 +72,18 @@ export function Chat() {
       : undefined;
 
   const isEmpty = messages.length === 0;
+  const chatDisabled = isAuthLoading;
+  const userLabel = user?.email || user?.name || "Signed in";
+
+  async function handleSignOut() {
+    await signOut();
+    router.replace("/login");
+    router.refresh();
+  }
 
   return (
     <div className="flex h-screen bg-rh-dark text-rh-white overflow-hidden">
-      {/* <Sidebar
+      <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((v) => !v)}
         conversations={conversations}
@@ -85,18 +96,17 @@ export function Chat() {
           setSettingsOpen(true);
           if (isMobile()) setSidebarOpen(false);
         }}
-      /> */}
+      />
 
-      {/* Mobile / tablet: dim main when sidebar is expanded so it floats instead of squeezing layout */}
-      {/* {sidebarOpen && (
+      {sidebarOpen && (
         <div
           className="fixed inset-0 z-30 bg-black/50 md:hidden"
           aria-hidden
           onClick={() => setSidebarOpen(false)}
         />
-      )} */}
+      )}
 
-      {/* {settingsOpen && (
+      {settingsOpen && (
         <SettingsModal
           showSources={showSources}
           onShowSourcesChange={setShowSources}
@@ -107,11 +117,11 @@ export function Chat() {
           backendStatus={backendStatus}
           onClose={() => setSettingsOpen(false)}
         />
-      )} */}
+      )}
 
       <main className="flex flex-col flex-1 overflow-hidden min-w-0 w-full bg-rh-dark">
         <header className="shrink-0 bg-rh-dark px-4 py-4 flex items-center gap-3">
-          {/* <Button
+          <Button
             type="button"
             variant="ghost"
             size="icon"
@@ -120,7 +130,7 @@ export function Chat() {
             onClick={() => setSidebarOpen(true)}
           >
             <Icon name="menu" size="md" />
-          </Button> */}
+          </Button>
           <Image
             src="/taxapp.png"
             alt="Taxapp"
@@ -129,6 +139,18 @@ export function Chat() {
             className="h-9 w-auto max-w-[min(200px,45vw)] rounded-sm object-contain object-left shrink-0"
             priority
           />
+          <div className="ml-auto flex items-center gap-2">
+            <span className="max-w-[180px] truncate text-xs text-rh-cool-gray">{userLabel}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="small"
+              disabled={isAuthLoading}
+              onClick={handleSignOut}
+            >
+              Sign out
+            </Button>
+          </div>
         </header>
 
         {error && (
@@ -160,8 +182,8 @@ export function Chat() {
                     variant="embedded"
                     onSend={sendMessage}
                     isLoading={isLoading}
-                    disabled={inputDisabled}
-                    disabledReason={disabledReason}
+                    disabled={inputDisabled || chatDisabled}
+                    disabledReason={chatDisabled ? "Please sign in to continue." : disabledReason}
                   />
 
                   <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
@@ -171,8 +193,8 @@ export function Chat() {
                         type="button"
                         variant="outline"
                         size="small"
-                        disabled={inputDisabled || isLoading}
-                        className="!h-auto min-h-0 py-2.5 px-3 text-left font-normal whitespace-normal"
+                        disabled={inputDisabled || isLoading || chatDisabled}
+                        className="h-auto! min-h-0 py-2.5 px-3 text-left font-normal whitespace-normal"
                         onClick={() => sendMessage(text)}
                       >
                         {text}
@@ -195,8 +217,8 @@ export function Chat() {
                 variant="footer"
                 onSend={sendMessage}
                 isLoading={isLoading}
-                disabled={inputDisabled}
-                disabledReason={disabledReason}
+                disabled={inputDisabled || chatDisabled}
+                disabledReason={chatDisabled ? "Please sign in to continue." : disabledReason}
               />
             </div>
           )}
