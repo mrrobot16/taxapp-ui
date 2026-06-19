@@ -9,13 +9,16 @@ const envConfigs: Record<AppEnv, EnvConfig> = {
     backendUrl: "http://127.0.0.1:8000",
   },
   development: {
-    backendUrl: "https://api.taxapp.dev",
+    // backendUrl: "https://api.taxapp.dev",
+    backendUrl: "https://taxapp.serveousercontent.com",
   },
   staging: {
-    backendUrl: "https://api.taxapp.dev",
+    // backendUrl: "https://api.taxapp.dev",
+    backendUrl: "https://taxapp.serveousercontent.com",
   },
   production: {
-    backendUrl: "https://api.taxapp.dev"
+    // backendUrl: "https://api.taxapp.dev"
+    backendUrl: "https://taxapp.serveousercontent.com",
   },
 };
 
