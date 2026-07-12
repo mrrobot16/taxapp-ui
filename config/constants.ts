@@ -3,6 +3,8 @@ export const DEFAULT_BACKEND_URL = "http://127.0.0.1:8000";
 export const API_ROUTES = {
   chat: "/api/chat",
   health: "/api/health",
+  healthV2: "/api/health-v2",
+  healthV3: "/api/health-v3",
 } as const;
 
 export const HTTP_STATUS_SERVICE_UNAVAILABLE = 503;
